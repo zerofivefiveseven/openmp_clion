@@ -1,22 +1,35 @@
-//2
-#include <stdio.h>
 #include <omp.h>
+#include <cstdint> //int64_t
+//5
+#include <iostream>
 
-#define pthread 12
-#define a 0
-#define b 5
-#define N 1000000//number of iterations - accuracy
-//https://www.integral-calculator.ru/
-//f(x) = x^3
-int main(int argc, char** argv)
+#define N 4
+using namespace std;
+
+int main()
 {
-    int i;
-    long double h = (b - a) / (long double)N, y = 0.0, start, time;
+    int64_t n = 100;
+    //cout << "n = ";
+    //cin >> n;
+    int64_t* a = new int64_t[n + 1];
+    long double start = 0.0, time = 0.0;
+
     start = omp_get_wtime();
-#pragma omp parallel for num_threads(pthread)
-    for (i = 0; i < N; ++i)
-        y += (i * h) * (i * h) * (i * h);
+#pragma omp parallel for shared(a, n) num_threads(N)
+        for (int64_t i = 0; i < n + 1; i++)
+            a[i] = i;
+
+#pragma omp parallel for shared(a, n) num_threads(N)
+    for (int64_t p = 2; p < n + 1; p++)
+    {
+        if (a[p] != 0)
+        {
+            //cout << a[p] << endl;
+            for (int64_t j = p * p; j < n + 1; j += p)
+                a[j] = 0;
+        }
+    }
     time = omp_get_wtime() - start;
-    printf("Time = %lf \ny = %f", time, y * h);
+    cout << "time = " << time << "\n";
     return 0;
 }

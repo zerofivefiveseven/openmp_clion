@@ -1,35 +1,31 @@
+//4
+#include <stdio.h>
 #include <omp.h>
-#include <cstdint> //int64_t
-//5
-#include <iostream>
-
-#define N 4
-using namespace std;
-
-int main()
+#include <unistd.h>
+#include <math.h>
+#define acc 0.00000000001
+#define N 100000
+#define pthread 4
+#define ee 2.718281828459045
+#define pp 3.1415926535
+int main(int argc, char** argv)
 {
-    int64_t n = 100;
-    //cout << "n = ";
-    //cin >> n;
-    int64_t* a = new int64_t[n + 1];
-    long double start = 0.0, time = 0.0;
-
+    bool flag = true;
+    int i;
+    long double x = 0.0, pi = 0.0, start = 0.0, time = 0.0 ,e;
     start = omp_get_wtime();
-#pragma omp parallel for shared(a, n) num_threads(N)
-        for (int64_t i = 0; i < n + 1; i++)
-            a[i] = i;
-
-#pragma omp parallel for shared(a, n) num_threads(N)
-    for (int64_t p = 2; p < n + 1; p++)
+#pragma omp parallel for private(x) num_threads(pthread)
+    for (i = 1; i < N; ++i)
     {
-        if (a[p] != 0)
-        {
-            //cout << a[p] << endl;
-            for (int64_t j = p * p; j < n + 1; j += p)
-                a[j] = 0;
-        }
+        if (!flag) continue;
+        if(abs(pi - pp) < acc && abs(e - ee) < acc){
+            flag = false;}
+        x = (i + 0.5) / N;
+#pragma omp critical
+        pi += 4 / (1 + x * x);
+        e = pow((1+(1/(long double)i)),i);
     }
     time = omp_get_wtime() - start;
-    cout << "time = " << time << "\n";
+    printf("Time = %Lf\npi = %Lf\ne = %Lf", time, pi / N, e);
     return 0;
 }
