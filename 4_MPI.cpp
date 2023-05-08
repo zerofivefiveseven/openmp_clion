@@ -4,7 +4,7 @@
 
 #define N 100
 #define ROOT 0
-
+//TODO reedit with homework req
 int is_prime(int n)
 {
     int top, d;

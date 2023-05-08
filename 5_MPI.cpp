@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <mpi.h>
-
+//TODO reedit with homework req
 #define a 0
 #define b 5
 #define N 1000000

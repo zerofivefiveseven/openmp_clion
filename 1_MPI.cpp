@@ -1,7 +1,7 @@
 #include "mpi.h"
 #include <iostream>
 #include <unistd.h>
-
+//TODO reedit with homework req
 static int gsize, rank;
 
 int main(int argc, char* argv[]) 
