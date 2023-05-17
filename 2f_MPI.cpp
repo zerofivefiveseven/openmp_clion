@@ -1,14 +1,17 @@
 #include <stdio.h>
 #include <mpi.h>
-#include <math.h>
-#define N 10000
+//TODO reedit with homework req
+#define a 0
+#define b 5
+#define N 1000000
 #define ROOT 0
+//f(x) = x^3
 
 int main(int argc, char* argv[])
 {
     int rank, size, i;
-    long double result = 0.0, sum = 0.0, begin = 0.0, end = 0.0, x,e;
-
+    long double result = 0.0, sum = 0.0, begin = 0.0, end = 0.0, x;
+    long double h = (b - a) / (long double)N, y = 0.0;
     MPI_Init(&argc, &argv);
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -17,19 +20,15 @@ int main(int argc, char* argv[])
     begin = MPI_Wtime();
 
     for (i = rank; i < N; i += size)
-    {
-        x = (i + 0.5) / N;
-        result += 4.0 / (1.0 + x * x);
-        //result = pow(1+(1/i), i);
-    }
-
-    MPI_Reduce(&result, &sum, 1, MPI_LONG_DOUBLE, MPI_SUM, ROOT, MPI_COMM_WORLD);
+        y += (i * h) * (i * h) * (i * h);
+    
+    MPI_Reduce(&y, &sum, 1, MPI_LONG_DOUBLE, MPI_SUM, ROOT, MPI_COMM_WORLD);
     end = MPI_Wtime();
 
     MPI_Barrier(MPI_COMM_WORLD);
 
     if (rank == ROOT)
-        printf("Time=%fs\nPI=%lf\n", end - begin, sum / N);
+        printf("Time = %fs\ny = %lf\n", end - begin, sum * h);
     
     MPI_Finalize();
     return 0;

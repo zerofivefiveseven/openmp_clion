@@ -1,8 +1,8 @@
 #include "mpi.h"
 #include <iostream>
 #include <unistd.h>
-//TODO reedit with homework req
-static int gsize, rank;
+static int gsize;
+static int rank;
 
 int main(int argc, char* argv[]) 
 {
@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 		
 	printf("Hello, World! I'm thread %d from %d threads\n", rank, gsize);
 
-    sleep(1000); //sleep(1); ��� ����
+    sleep(5);
 		if ((rank & 1) == 0)
 			printf("I'm thread %d. I'm even.\n", rank);
 
